@@ -1,47 +1,31 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import Greet from "./components/Greet.vue";
+import { invoke } from '@tauri-apps/api';
+import { ref } from 'vue';
+
+var secret_number = Math.floor((Math.random() * 100) + 1);
+var return_string = ref('');
+var user_guess = ref(0);
+function rice() {
+  invoke('ev_number', {user69: user_guess.value, secretNumber:secret_number}).then((result) =>{
+    console.log(result);
+    return_string.value = result as string;
+  });
+  console.log('working');
+}
 </script>
 
 <template>
   <div class="container">
-    <h1>Welcome to Tauri!</h1>
-
-    <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
-    <p>
-      Recommended IDE setup:
-      <a href="https://code.visualstudio.com/" target="_blank">VS Code</a>
-      +
-      <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-      +
-      <a href="https://github.com/tauri-apps/tauri-vscode" target="_blank"
-        >Tauri</a
-      >
-      +
-      <a href="https://github.com/rust-lang/rust-analyzer" target="_blank"
-        >rust-analyzer</a
-      >
-    </p>
-
-    <Greet />
+    <input v-model="user_guess" type="number" id="guess" placeholder="entre a number">
+    <button v-on:click="rice()" class="check">check number</button>
+    <p>{{ return_string }}</p>
   </div>
 </template>
 
 <style scoped>
+.check {
+  margin-top: 10px;
+}
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }
